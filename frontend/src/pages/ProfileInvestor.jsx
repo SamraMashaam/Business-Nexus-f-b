@@ -8,7 +8,7 @@ const ProfileInvestor = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    organization: "",
+    organizations: "",
     investmentRange: "",
     investmentInterests: "",
   });
@@ -21,11 +21,19 @@ const ProfileInvestor = () => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        setInvestor(res.data);
-        setFormData(res.data);
+        const data = res.data;
+        setInvestor(data);
+        setFormData({
+          name: data.name || "",
+          email: data.email || "",
+          organizations: data.organizations || "",
+          investmentRange: data.investmentRange || "",
+          investmentInterests: data.investmentInterests || "",
+        });
       })
       .catch((err) => console.error(err));
   }, []);
+
 
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -33,9 +41,11 @@ const ProfileInvestor = () => {
 
   const handleSave = async () => {
     try {
-      const res = await axios.put("http://localhost:5000/api/investor/profile", formData, {
+      console.log("Form data: ", formData);
+      const res = await axios.put("http://localhost:5000/api/investor/profile/update", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      
       setInvestor(res.data);
       setEditMode(false);
     } catch (err) {
@@ -45,7 +55,6 @@ const ProfileInvestor = () => {
   };
 
   if (!investor) return <div className="text-white p-8">Loading...</div>;
-
   return (
     <div className="flex min-h-screen">
       <SidebarInvestor />
@@ -56,7 +65,7 @@ const ProfileInvestor = () => {
         </h1>
 
         <div className="bg-emerald-200 p-6 rounded-2xl shadow-md grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-800">
-          {["name", "email", "organization", "investmentRange"].map((field) => (
+          {["name", "email", "organizations", "investmentRange"].map((field) => (
             <div key={field}>
               <h2 className="text-xl font-semibold mb-2 capitalize">
                 {field.replace(/([A-Z])/g, " $1")}

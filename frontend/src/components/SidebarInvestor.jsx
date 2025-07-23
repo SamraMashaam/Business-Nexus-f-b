@@ -9,7 +9,7 @@ const SidebarInvestor = () => {
 
       <nav className="space-y-6">
         <Link
-          to="/profile/investor/23"
+          to="/profile/investor"
           className="flex items-center gap-3 hover:text-emerald-400"
         >
           <User size={20} /> Profile
