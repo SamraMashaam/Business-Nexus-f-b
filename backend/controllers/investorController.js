@@ -68,7 +68,7 @@ export const getInvestorProfile = async (req, res) => {
   try {
     const investor = await Investor.findById(req.user.id).select('-password');
     if (!investor) return res.status(404).json({ message: 'Investor not found' });
-
+    console.log("Sending back investor:", investor);
     res.status(200).json(investor);
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
@@ -78,14 +78,14 @@ export const getInvestorProfile = async (req, res) => {
 // Update investor profile
 export const updateInvestorProfile = async (req, res) => {
   try {
-    const { name, email, organization, investmentRange, investmentInterests } = req.body;
-
+    const { name, email, organizations, investmentRange, investmentInterests } = req.body;
+    console.log("Incoming data:", req.body);
     const updatedInvestor = await Investor.findByIdAndUpdate(
       req.user.id,
       {
         name,
         email,
-        organization,
+        organizations,
         investmentRange,
         investmentInterests,
       },

@@ -4,6 +4,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import investorRoutes from './routes/investorRoutes.js';
 import entrepreneurRoutes from './routes/entrepreneurRoutes.js';
+import authRoutes from './routes/auth.js';
+
+
 
 dotenv.config();
 const app = express();
@@ -19,6 +22,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/investor', investorRoutes);
 app.use('/api/entrepreneur', entrepreneurRoutes);
+app.use('/api', authRoutes);
 
 // MongoDB connection
 mongoose.connect(process.env.MONGO_URI, {

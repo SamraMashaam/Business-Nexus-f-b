@@ -59,3 +59,42 @@ export const loginEntrepreneur = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: err.message });
   }
 };
+
+export const getEntrepreneurProfile = async (req, res) => {
+  try {
+    const entrepreneur = await Entrepreneur.findById(req.user.id).select("-password");
+    if (!entrepreneur) return res.status(404).json({ message: "Entrepreneur not found" });
+
+    res.status(200).json(entrepreneur);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// controllers/entrepreneurController.js
+
+export const updateEntrepreneurProfile = async (req, res) => {
+  try {
+    const { name, email, startupName, industry, pitchSummary } = req.body;
+    console.log("Incoming data:", req.body);
+
+    const updatedEntrepreneur = await Entrepreneur.findByIdAndUpdate(
+      req.user.id,
+      {
+        name,
+        email,
+        startupName,
+        industry,
+        pitchSummary,
+      },
+      { new: true }
+    ).select('-password');
+
+    if (!updatedEntrepreneur)
+      return res.status(404).json({ message: "Entrepreneur not found" });
+
+    res.status(200).json(updatedEntrepreneur);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
